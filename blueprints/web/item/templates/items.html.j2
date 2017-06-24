@@ -1,0 +1,18 @@
+{% extends "base.html.j2" %}
+
+{% macro itemListing(item) %}
+  <a class="list-group-item" href="/item/{{ item['id'] }}">
+    {{ item['name'] }}
+  </a>
+{% endmacro %}
+
+{% block body %}
+  <div class="container">
+    <h2>Items</h2>
+    <div class="list-group">
+      {% for item in items %}
+        {{ itemListing(item) }}
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

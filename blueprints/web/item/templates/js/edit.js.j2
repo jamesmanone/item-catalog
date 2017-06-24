@@ -1,0 +1,51 @@
+const state = '{{ state }}';
+
+document.getElementById('new-item-form')
+  .addEventListener('submit', e => {
+    e.preventDefault();
+    let title = document.getElementById('form-title').value;
+    let category = document.getElementById('form-category').value;
+    let description = document.getElementById('form-description').value;
+    let data = {
+      state: state,
+      title: title,
+      category: category,
+      description: description
+    };
+
+    let init = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(data)
+    };
+
+    const formError = document.getElementById('form-error');
+
+    if(data.state && data.title && data.category && data.description) {
+      sendToServer(data, init);
+    } else if(!data.state) {
+      formError.style.display = 'block';
+      formError.innerHTML = 'You must be logged in';
+    } else {
+      formError.style.display = 'block';
+      document.getElementById('form-error').innerHTML = 'All fields required';
+    }
+  });
+
+
+function sendToServer(data, init) {
+  fetch('{{ url_for("item.edit_item", item_id=item.id) }}', init)
+    .then(res => {
+      if(!res.ok) {
+        throw new Error(res.status);
+      } else {
+        return res;
+      }
+    })
+    .then(res => res.json())
+    .then(res => window.location.href = res.href)
+    .catch(e => console.log(e));
+}

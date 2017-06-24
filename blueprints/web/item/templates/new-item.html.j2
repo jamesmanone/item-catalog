@@ -1,0 +1,39 @@
+{% extends "base.html.j2" %}
+{% macro category(choice) %}
+  <option>{{ choice }}</option>
+{% endmacro %}
+
+{% block body %}
+  <div class="container">
+    <h2>New Item</h2>
+    <br>
+    <div id="form-error" class="alert alert-danger"></div>
+    <form id="new-item-form">
+      <div class="row form-group">
+        <div class="col-md-8">
+          <label class="sr-only">Title</label>
+          <input id="form-title" type="text" class="form-control" name="title" placeholder="Title">
+
+        </div>
+        <div class="col-md-4">
+          <input id="form-category" class="form-control" list="categories", name="category" placeholder="Category">
+          <datalist id="categories">
+            {% for choice in categories %}
+              {{ category(choice.name) }}
+            {% endfor %}
+          </datalist>
+        </div>
+      </div>
+      <br>
+      <textarea id="form-description" class="form-control" name="description" placeholder="Description" rows="15"></textarea>
+      <br>
+      <button class="btn btn-success pull-right" type="submit" name="Submit">Submit</button>
+    </form>
+  </div>
+{% endblock %}
+
+{% block more_scripts %}
+  <script>
+    {% include 'js/newitem.js.j2' %}
+  </script>
+{% endblock %}

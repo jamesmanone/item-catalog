@@ -1,0 +1,78 @@
+
+
+function sendTokenToServer(googleUser) {
+  let data = {
+    code: googleUser.getAuthResponse().id_token,
+    state: '{{ state | safe }}'
+  };
+
+  sendToServer(data);
+}
+
+function sendToServer(data) {
+  let init = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(data)
+  };
+  fetch('/user/gconnect', init)
+    .then(res => {
+      if(!res.ok){
+        throw new Error(res);
+      } else {
+        return res;
+      }
+    })
+    .then(() => {
+      const last = document.referrer;
+      if(last.indexOf('localhost') != -1 || last.indexOf('udfsndfp.com') != -1) {
+        window.location.href = document.referrer;
+      } else {
+        window.location.href = '/';
+      }
+    })
+    .catch(e => console.log(e));
+}
+
+function fbLogin() {
+  FB.getLoginStatus(res => {
+    if(res.status === 'connected') {
+      let data = {
+        state: '{{ state | safe }}',
+        code: res.authResponse.accessToken
+      };
+      fbSendTokenToServer(data);
+    }
+  });
+}
+
+function fbSendTokenToServer(data) {
+  let init = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+    body: JSON.stringify(data)
+  };
+  fetch('/user/fbconnect', init)
+    .then(res => {
+      if(!res.ok){
+        throw new Error(res);
+      } else {
+        return res;
+      }
+    })
+    .then(() => {
+      const last = document.referrer;
+      if(last.indexOf('localhost') != -1 || last.indexOf('udfsndfp.com') != -1) {
+        window.location.href = document.referrer;
+      } else {
+        window.location.href = '/'; // This works in chrome js console
+      }
+    })
+    .catch(e => console.log(e));
+}

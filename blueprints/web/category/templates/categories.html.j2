@@ -1,0 +1,22 @@
+{% extends 'base.html.j2' %}
+
+{% block body %}
+  <div class="container" id="category-view">
+    <div class="row">
+      <div class="col-md-4 list-group" data-bind="foreach: categoryList">
+        <a href="#" class="list-group-item" data-bind="text: $data.name, click: $root.listClick, css: { active: $data == $root.activeCategory() }">
+
+        </a>
+      </div>
+      <!-- ko if: activeCategory() -->
+        <div class="col-md-8 list-group" data-bind="foreach: activeCategory().items()">
+          <a class="list-group-item" data-bind="attr: {href: $data.href}, text: $data.name"></a>
+        </div>
+      <!-- /ko -->
+    </div>
+  </div>
+{% endblock %}
+
+{% block more_scripts %}
+  <script src="{{ url_for('category.static', filename='category.js') }}"></script>
+{% endblock %}

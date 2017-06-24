@@ -1,0 +1,57 @@
+{% macro navLink(label, href) -%}
+  {% if label in page %}
+    {% set class = '"active"' %}
+  {% endif %}
+  <li><a href={{ href | safe }}>{{label}}</a></li>
+{%- endmacro %}
+
+<!-- modified from getbootstrap.com -->
+<nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Item Catalog</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-left">
+        {{ navLink('Home', url_for('home')) }}
+        {{ navLink('Items', url_for('item.items')) }}
+        {{ navLink('Catagories', url_for('category.categories')) }}
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        {{ navLink('Search', url_for('search.search')) }}
+        {% if session.logged_in %}
+          <li class="dropdown">
+            <a href="#" class="btn dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Menu &darr;<span class="carret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+              {{ navLink('Add Item', url_for('item.add_item')) }}
+
+
+              <li role="separator" class="divider"></li>
+              {{ navLink('Logout', url_for('user.logout')) }}
+            </ul>
+          </li>
+        {% else %}
+          {{ navLink('Login', url_for('user.login')) }}
+        {% endif %}
+      </ul>
+
+      <form class="navbar-form form-inline navbar-right" id="navbar-search" action="/search">
+        <input class="form-control" list="searchbar" name="q" placeholder="Search" data-bind="textInput: query" autocomplete="on">
+        <datalist id="searchbar" data-bind="foreach: searchOptions">
+          <option data-bind="attr: {value: $data}"></option>
+        </datalist>
+        <button class="btn btn-default" type="submit" value="Submit">Search</button>
+      </form>
+
+    </div>
+  </div>
+</nav>

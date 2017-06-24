@@ -1,0 +1,31 @@
+{% extends 'base.html.j2' %}
+
+{% block body %}
+
+  <script>{% include 'fb.js' %}</script>
+
+  <div id="fb-root"></div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-5"></div>
+      <div class="col-md-7">
+
+        <div class="g-signin2" data-onsuccess="sendTokenToServer"></div><br><br>
+        <fb:login-button scope="public_profile,email" size="medium" button-type="continue_with" onlogin="fbLogin();"></fb:login-button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block more_scripts %}
+  <!-- js merged with html to allow state to be passed to js as variable without hidden div -->
+  <script>{% include 'loginscript.js.j2' %}</script>
+  <script async defer src="//apis.google.com/js/client:platform.js?onload=start"></script>
+{% endblock %}
+
+
+{% block head %}
+  <meta name="google-signin-client_id" content="201339145304-jp8b9vd0od27pcsma7ke52jsol7gdd6u.apps.googleusercontent.com">
+{% endblock %}

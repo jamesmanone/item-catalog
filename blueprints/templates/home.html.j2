@@ -1,0 +1,33 @@
+{% extends "base.html.j2" %}
+{% block body %}
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-1">
+
+        </div>
+        <div class="col-md-10">
+          <h1>Welcome to my Item Catalog</h1>
+          <p class="lead">
+            This item catalog is a demonstration of the ability to store items in an SQL-type database
+            and serve them on a website.<br>It is built using:
+          </p>
+          <ul>
+            <li>Python Flask framework</li>
+            <li>postgreSQL database</li>
+            <li>SQLAlchemy object relational map</li>
+            <li>Bootstrap</li>
+            <li>Knockoutjs</li>
+          </ul>
+          <h3>View Our Items:</h3>
+          <hr>
+          <div class="text-center">
+            <a class="btn btn-success btn-lg" href="/catagory">Catagories</a>
+
+            <a class="btn btn-success btn-lg" href="/item">Items</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
