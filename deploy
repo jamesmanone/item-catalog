@@ -1,0 +1,47 @@
+#!/bin/bash
+# Add new users and copy ssh keys
+adduser james
+adduser grader
+cp /root/.ssh/authorized_keys /home/james/.ssh/authorized_keys
+chown -R james /home/james/.ssh
+chmod -R 644 /home/james/.ssh
+
+cp /root/.ssh/authorized_keys /home/grader/.ssh/authorized_keys
+chown -R james /home/grader/.ssh
+chmod -R 644 /home/grader/.ssh
+# Update apt-get and install pachages
+apt-get -qqy update
+apt-get -qqy upgrade
+apt-get -qqy install apache2
+apt-get -qqy install libapache2-mod-wsgi
+apt-get -qqy install postgresql python-psycopg2
+apt-get -qqy install python-sqlalchemy
+apt-get -qqy install python-pip
+pip install -q --upgrade pip
+pip install -q flask
+pip install -q flask-sqlalchemy
+pip install -q oauth2client
+pip install -q requests
+pip install -q httplib2
+# Setup db
+runuser -l postgres -c "psql -c \"CREATE USER weblink WITH PASSWORD '12345' CREATEDB;\""
+runuser -l postgres -c "psql -c \"CREATE DATABASE catalog OWNER weblink\""
+# Copy source code to apache directory and setup
+mkdir /var/www/catalog
+unalias cp
+cp -R /catalog /var/www/catalog
+/var/www/catalog/dbinit.py
+cp /var/www/catalog/config/udfsndfp.com.config /etc/apache2/sites-available/udfsndfp.com.config
+a2ensite udfsndfp.com.conf
+a2dissite 000-default.conf
+systemctl restart apache2
+# Setup ssh and firewall
+cp -f /var/www/catalog/config/sshd_config /etc/ssh/sshd_config
+ufw default allow outgoing
+ufw default deny incoming
+ufw allow 80
+ufw allow 2200/tcp
+ufw allow ntp
+# Moment of truth
+ufw enable
+service sshd restart
